@@ -19,8 +19,8 @@ const scopes = [
   "user-modify-playback-state",
 ],
   redirectUri = "http://localhost:3000",
-  clientId = "",
-  clientSecret = "",
+  clientId = "436ac09d658f4723a59c3c3b9f0bf5ee",
+  clientSecret = "0389ea2bd3994324ae91d21844cb5d8b",
   state = "some-state-of-my-choice";
 
 const credentials = {
@@ -29,13 +29,14 @@ const credentials = {
   redirectUri: redirectUri
 };
 
-const spotifyApi = new SpotifyWebApi(credentials);
 
 app.post("/login", (req, res) => {
   const code = req.body.code;
 
+  const spotifyApi = new SpotifyWebApi(credentials);
+
   spotifyApi.authorizationCodeGrant(code).then((data) => {
-    console.log(data);
+    res.send(data)
   }).catch((err) => {
     console.log(err);
     res.sendStatus(400)
@@ -46,6 +47,19 @@ app.post("/login", (req, res) => {
 app.get("/", (req, res) => {
   res.send("response here");
 });
+
+
+app.post("/refresh", (req, res) => {
+  const refreshToken = req.body.refreshToken;
+  const spotifyApi = new SpotifyWebApi({...credentials, refreshToken});
+
+  spotifyApi.refreshAccessToken().then((response) => {
+    res.send(response)
+  }).catch((err) => {
+    console.log(err);
+    res.sendStatus(400)
+  });
+})
 
 // var authorizeURL = spotifyApi.createAuthorizeURL(scopes, state);
 app.listen(port, () => {

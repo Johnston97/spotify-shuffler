@@ -1,6 +1,7 @@
 import React from "react";
 
 export default function Track({ track }) {
+  console.log("TRACK", track);
   return (
     <div
       className="d-flex m-2 align-items-center"
@@ -8,7 +9,7 @@ export default function Track({ track }) {
     >
       <img src={track.albumUrl} style={{ height: "64px", width: "64px" }} />
       <div className="ml-3">
-        <div>{track.name}</div>
+        <div>{track.title}</div>
       </div>
       <div></div>
     </div>

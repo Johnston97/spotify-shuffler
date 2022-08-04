@@ -30,6 +30,7 @@ const credentials = {
 };
 
 app.post("/login", (req, res) => {
+  console.log("login");
   const code = req.body.code;
 
   const spotifyApi = new SpotifyWebApi(credentials);
@@ -50,6 +51,7 @@ app.get("/", (req, res) => {
 });
 
 app.post("/refresh", (req, res) => {
+  console.log("refresh");
   const refreshToken = req.body.refreshToken;
   const spotifyApi = new SpotifyWebApi({ ...credentials, refreshToken });
 

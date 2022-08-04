@@ -1,16 +1,15 @@
 import React, { useEffect, useState } from "react";
 import useAuth from "./useAuth";
-import { Container, Form } from "react-bootstrap";
+import { Container } from "react-bootstrap";
+import chooseSmallestImage from "./helpers/chooseSmallestImage";
 import SpotifyWebApi from "spotify-web-api-node";
-import TrackSearchResult from "./TrackSearchResult";
-import Player from "./Player";
-import PlaylistOverview from "./PlaylistOverview";
 import Playlist from "./Playlist";
+import PlaylistOverview from "./PlaylistOverview";
+require("dotenv").config();
 
-const redirectUri = "http://localhost:3000",
-  clientId = "436ac09d658f4723a59c3c3b9f0bf5ee",
-  clientSecret = "0389ea2bd3994324ae91d21844cb5d8b",
-  state = "some-state-of-my-choice";
+const redirectUri = process.env.REDIRECT_URI,
+  clientId = process.env.CLIENT_ID,
+  clientSecret = process.env.CLIENT_SECRET;
 
 const credentials = {
   clientId: clientId,
@@ -22,19 +21,19 @@ const spotifyApi = new SpotifyWebApi(credentials);
 
 export default function Dashboard({ code }) {
   const accessToken = useAuth(code);
-  const [search, setSearch] = useState("");
-  const [searchResults, setSearchResults] = useState([]);
+  // const [search, setSearch] = useState("");
+  // const [searchResults, setSearchResults] = useState([]);
   const [playlists, setPlaylists] = useState([]);
   const [playlist, setPlaylist] = useState("");
-  const [playingTrack, setPlayingTrack] = useState("");
-  const [playlistTracks, setPlaylistTracks] = useState([]);
-
-  function chooseTrack(track) {
-    setPlayingTrack(track);
-    setSearch("");
-  }
+  // const [playingTrack, setPlayingTrack] = useState("");
+  // const [playlistTracks, setPlaylistTracks] = useState([]);
+  // function chooseTrack(track) {
+  //   setPlayingTrack(track);
+  //   setSearch("");
+  // }
 
   function choosePlaylist(playlist) {
+    console.log("CHosing");
     setPlaylist(playlist);
     setPlaylists([]);
   }
@@ -44,80 +43,82 @@ export default function Dashboard({ code }) {
     spotifyApi.setAccessToken(accessToken);
   }, [accessToken]);
 
-  useEffect(() => {
-    if (!search) return setSearchResults([]);
-    if (!accessToken) return;
+  // useEffect(() => {
+  //   if (!search) return setSearchResults([]);
+  //   if (!accessToken) return;
 
-    let cancel = false;
+  //   let cancel = false;
 
-    spotifyApi.searchTracks(search).then((res) => {
-      if (cancel) return;
-      console.log(res.body);
-      setSearchResults(
-        res.body.tracks.items.map((track) => {
-          const smallestAlbumImage = track.album.images.reduce(
-            (smallest, image) => {
-              if (image.height < smallest.height) return image;
-              return smallest;
-            },
-            track.album.images[0]
-          );
+  //   spotifyApi.searchTracks(search).then((res) => {
+  //     if (cancel) return;
+  //     console.log(res.body);
+  //     setSearchResults(
+  //       res.body.tracks.items.map((track) => {
+  //         const smallestAlbumImage = chooseSmallestImage(track.album.images);
 
-          return {
-            artist: track.artists[0].name,
-            title: track.name,
-            uri: track.uri,
-            albumUrl: smallestAlbumImage.url,
-          };
-        })
-      );
-    });
-    return () => (cancel = true);
-  }, [search, accessToken]);
+  //         return {
+  //           artist: track.artists[0].name,
+  //           title: track.name,
+  //           uri: track.uri,
+  //           albumUrl: smallestAlbumImage.url,
+  //         };
+  //       })
+  //     );
+  //   });
+  //   return () => (cancel = true);
+  // }, [search]);
 
   useEffect(() => {
     if (!accessToken) return;
+    if (playlist) return;
     spotifyApi.getUserPlaylists().then((res) => {
       setPlaylists(
         res.body.items.map((playlist) => {
-          const smallestPlaylistImage = playlist.images.reduce(
-            (smallest, image) => {
-              if (image.height < smallest.height) return image;
-              return smallest;
-            },
-            playlist.images[0]
-          );
-          console.log(playlist);
+          const smallestPlaylistImage = chooseSmallestImage(playlist.images);
+
           return {
             name: playlist.name,
             id: playlist.id,
             albumUrl: smallestPlaylistImage.url,
+            totalTracks: playlist.tracks.total,
           };
         })
       );
     });
   }, [accessToken]);
 
-  useEffect(() => {
-    if (!accessToken) return;
-    if (!playlist) return;
-    if (playlist.tracks > playlist.tracks.limit) {
-      // Divide the total number of track by the limit to get the number of API calls
-      for (
-        let i = 1;
-        i < Math.ceil(playlist.tracks.total / playlist.tracks.limit);
-        i++
-      ) {
-        const trackToAdd = spotifyApi.getPlaylistTracks(playlist.id, {
-          offset: playlist.tracks.limit * i, // Offset each call by the limit * the call's index
-        }).body;
+  // useEffect(() => {
+  //   if (!accessToken) return;
+  //   if (!playlist) return;
+  //   // if (playlist.tracks > limit) {
+  //   //   // Divide the total number of track by the limit to get the number of API calls
+  //   //   for (let i = 1; i < Math.ceil(playlist.tracks.total / limit); i++) {
+  //   //     const trackToAdd = spotifyApi.getPlaylistTracks(playlist.id, {
+  //   //       offset: limit * i, // Offset each call by the limit * the call's index
+  //   //     }).body;
 
-        // Push the retreived tracks into the array
-        trackToAdd.items.forEach((item) => playlist.tracks.items.push(item));
-        setPlaylistTracks(playlist.tracks);
-      }
-    }
-  }, [accessToken, playlist]);
+  //   //     // Push the retreived tracks into the array
+  //   //     trackToAdd.items.forEach((item) => playlist.tracks.items.push(item));
+  //   //     setPlaylistTracks(playlist.tracks);
+  //   //   }
+  //   // } else {
+  //   spotifyApi.getPlaylistTracks(playlist.id).then((res) => {
+  //     setPlaylistTracks(
+  //       res.body.items.map((item) => {
+  //         const smallestAlbumImage = chooseSmallestImage(
+  //           item.track.album.images
+  //         );
+
+  //         return {
+  //           artist: item.track.artists[0],
+  //           title: item.track.name,
+  //           uri: item.track.uri,
+  //           albumUrl: smallestAlbumImage.url,
+  //         };
+  //       })
+  //     );
+  //   });
+  // }, [playlist]);
 
   return (
     // <Container className="d-flex flex-column py-2" style={{ height: "100vh" }}>
@@ -157,9 +158,9 @@ export default function Dashboard({ code }) {
           })
         ) : (
           <Playlist
+            spotifyApi={spotifyApi}
             playlist={playlist}
             key={playlist.uri}
-            tracks={playlistTracks}
           />
         )}
       </div>

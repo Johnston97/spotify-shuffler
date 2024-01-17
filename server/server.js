@@ -29,22 +29,27 @@ const credentials = {
   redirectUri: redirectUri,
 };
 
-app.post("/login", (req, res) => {
-  console.log("login");
-  const code = req.body.code;
+// app.post("/login", (req, res) => {
+//   console.log("login");
+//   const code = req.body.code;
 
-  const spotifyApi = new SpotifyWebApi(credentials);
+//   const spotifyApi = new SpotifyWebApi(credentials);
+//   const authorizeUrl = spotifyApi.createAuthorizeURL(scopes)
+//   console.log(authorizeUrl)
 
-  spotifyApi
-    .authorizationCodeGrant(code)
-    .then((data) => {
-      res.send(data);
-    })
-    .catch((err) => {
-      console.log(err);
-      res.sendStatus(400);
-    });
-});
+//   fetch(authorizeUrl, {method: "GET"}).then((res) => {
+//     console.log(JSON.stringify(res.body))
+//   })
+//   spotifyApi
+//     .authorizationCodeGrant(code)
+//     .then((data) => {
+//       res.send(data);
+//     })
+//     .catch((err) => {
+//       console.log(err);
+//       res.sendStatus(400);
+//     });
+// });
 
 app.get("/", (req, res) => {
   res.send("response here");

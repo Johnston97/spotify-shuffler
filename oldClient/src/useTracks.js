@@ -1,0 +1,45 @@
+import { useEffect, useState } from "react";
+import chooseSmallestImage from "./helpers/chooseSmallestImage";
+
+const limit = 15;
+
+export default function useTracks(spotifyApi, playlist, pageNumber) {
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(false);
+  const [playlistTracks, setPlaylistTracks] = useState([]);
+  const [hasMore, setHasMore] = useState(false);
+
+  useEffect(() => {
+    if (pageNumber != 0 && !hasMore) return;
+    setLoading(true);
+    setError(false);
+    spotifyApi
+      .getPlaylistTracks(playlist.id, {
+        offset: limit * pageNumber, // Offset each call by the limit * the call's index,
+        limit: limit,
+      })
+      .then((res) => {
+        console.log(res.body);
+        setPlaylistTracks([
+          ...playlistTracks,
+          ...res.body.items.map((item) => {
+            const smallestAlbumImage = chooseSmallestImage(
+              item.track.album.images
+            );
+            return {
+              artist: item.track.artists[0].name,
+              title: item.track.name,
+              uri: item.track.uri,
+              albumUrl: smallestAlbumImage.url,
+            };
+          }),
+        ]);
+        setHasMore(playlistTracks.length < res.body.total);
+        setLoading(false);
+      })
+      .catch((e) => {
+        setError(true);
+      });
+  }, [pageNumber]);
+  return { loading, error, hasMore, playlistTracks };
+}

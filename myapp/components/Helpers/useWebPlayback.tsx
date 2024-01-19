@@ -27,8 +27,25 @@ const useWebPlayback = (accessToken: string) => {
 
       player.addListener('ready', ({ device_id }) => {
         console.log('Ready with Device ID', device_id)
+        player.activateElement()
         setActive(true)
         setDeviceId(device_id)
+      })
+
+      player.addListener('autoplay_failed', () => {
+        console.log('Autoplay is not allowed by the browser autoplay rules')
+      })
+
+      player.on('initialization_error', ({ message }) => {
+        console.error('Failed to initialize', message)
+      })
+
+      player.on('authentication_error', ({ message }) => {
+        console.error('Failed to authenticate', message)
+      })
+
+      player.on('playback_error', ({ message }) => {
+        console.error('Failed to perform playback', message)
       })
 
       player.addListener('not_ready', ({ device_id }) => {
@@ -39,10 +56,11 @@ const useWebPlayback = (accessToken: string) => {
 
       // Works from other pc, how to trigger from app?
       player.addListener('player_state_changed', (state) => {
-        console.log('State change')
+        console.log('State change', state)
         if (!state) {
           return
         }
+        console.log('Currently playing', state.track_window.current_track.name)
         setPaused(state.paused)
 
         player.getCurrentState().then((state) => {
@@ -51,6 +69,15 @@ const useWebPlayback = (accessToken: string) => {
       })
 
       player.connect()
+    }
+    return () => {
+      if (player) {
+        player.removeListener('ready')
+        player.removeListener('not_ready')
+        player.removeListener('player_state_changed')
+        setPaused(true)
+        player.disconnect()
+      }
     }
   }, [])
 

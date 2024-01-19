@@ -7,6 +7,7 @@ const PlayBarContainer = ({
   spotifyApi,
   selectedPlaylist,
   chooseTrack,
+  selectedPlaylistTracks,
 }) => {
   return (
     <Flex
@@ -23,6 +24,7 @@ const PlayBarContainer = ({
         spotifyApi={spotifyApi}
         selectedPlaylist={selectedPlaylist}
         chooseTrack={chooseTrack}
+        selectedPlaylistTracks={selectedPlaylistTracks}
       />
     </Flex>
   )

@@ -7,13 +7,15 @@ export default function useTracks(spotifyApi, playlist, pageNumber) {
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState(false)
   const [playlistTracks, setPlaylistTracks] = useState([])
-  const [hasMore, setHasMore] = useState(false)
+  const [hasMore, setHasMore] = useState(true)
 
   useEffect(() => {
     setPlaylistTracks([])
+    setHasMore(true)
   }, [playlist])
 
   useEffect(() => {
+    if (!hasMore) return
     if (pageNumber != 0 && !hasMore) {
       return
     }
@@ -25,7 +27,6 @@ export default function useTracks(spotifyApi, playlist, pageNumber) {
         limit: limit,
       })
       .then((res) => {
-        console.log(res)
         setPlaylistTracks((prevTracks) => {
           return [
             ...prevTracks,
@@ -48,6 +49,6 @@ export default function useTracks(spotifyApi, playlist, pageNumber) {
       .catch((e) => {
         setError(true)
       })
-  }, [pageNumber, hasMore, playlist, spotifyApi])
+  }, [pageNumber, hasMore, playlist])
   return { playlistTracks, hasMore, loading, error }
 }

@@ -1,5 +1,6 @@
 import { Box, Flex } from '@chakra-ui/layout'
 import Playlists from '../Playlists/Playlists'
+import scrollBar from '../../styles/scrollBar.json'
 
 const SideBar = ({ playlists, choosePlaylist, selectedPlaylist }) => {
   if (playlists != undefined) {
@@ -17,9 +18,11 @@ const SideBar = ({ playlists, choosePlaylist, selectedPlaylist }) => {
         <Box
           id="PlaylistsWrapper"
           height="90%"
-          bg="sienna"
+          bg="$spotify-dark-grey"
           margin="10px"
           overflow="auto"
+          color={'white'}
+          css={scrollBar}
         >
           Playlists
           {/*{playlists.map((playlist: any) => {*/}

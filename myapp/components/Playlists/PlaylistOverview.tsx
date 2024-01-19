@@ -8,16 +8,20 @@ const PlaylistOverview = ({ playlist, choosePlaylist, selectedPlaylist }) => {
   if (selectedPlaylist.name == playlist.name) {
     return (
       <Box id="PlaylistOverview">
-        <Flex id="SelectedPlaylist" height="64px" bg="sienna" margin="10px">
+        <Flex
+          id="SelectedPlaylist"
+          height="64px"
+          bg="brand.selected"
+          margin="10px"
+          color={'white'}
+        >
           <Box>
             <img
               src={playlist.albumUrl}
               style={{ height: '64px', width: '64px' }}
             />
           </Box>
-          <Box bg="yellow" margin="auto">
-            {playlist.name}
-          </Box>
+          <Box margin="auto">{playlist.name}</Box>
         </Flex>
       </Box>
     )
@@ -27,10 +31,12 @@ const PlaylistOverview = ({ playlist, choosePlaylist, selectedPlaylist }) => {
       <Flex
         id="Playlist"
         height="64px"
-        bg="sienna"
+        bg="$spotify-dark-grey"
         margin="10px"
         style={{ cursor: 'pointer' }}
         onClick={handleSelection}
+        _hover={{ bg: 'brand.hover' }}
+        color={'white'}
       >
         <Box>
           <img
@@ -38,7 +44,7 @@ const PlaylistOverview = ({ playlist, choosePlaylist, selectedPlaylist }) => {
             style={{ height: '64px', width: '64px' }}
           />
         </Box>
-        <Box bg="lavender" margin="auto">
+        <Box margin="auto" textAlign={'left'}>
           {playlist.name}
         </Box>
       </Flex>

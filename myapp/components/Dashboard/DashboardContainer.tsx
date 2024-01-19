@@ -22,6 +22,7 @@ const spotifyApi = new SpotifyWebApi(credentials)
 const DashboardContainer = ({ accessToken }) => {
   const [selectedPlaylist, setSelectedPlaylist] = useState('')
   const [selectedTrack, setSelectedTrack] = useState('')
+  const [selectedPlaylistTracks, setSelectedPlaylistTracks] = useState('')
 
   function choosePlaylist(playlist) {
     setSelectedPlaylist(playlist)
@@ -29,6 +30,10 @@ const DashboardContainer = ({ accessToken }) => {
 
   function chooseTrack(track) {
     setSelectedTrack(track)
+  }
+
+  function choosePlaylistTracks(playlistTracks) {
+    setSelectedPlaylistTracks(playlistTracks)
   }
 
   useMemo(() => {
@@ -52,6 +57,7 @@ const DashboardContainer = ({ accessToken }) => {
             playlist={selectedPlaylist}
             chooseTrack={chooseTrack}
             selectedTrack={selectedTrack}
+            choosePlaylistTracks={choosePlaylistTracks}
           ></Dashboard>
           <FeedBar></FeedBar>
         </Flex>
@@ -59,6 +65,7 @@ const DashboardContainer = ({ accessToken }) => {
           <PlayBarContainer
             accessToken={accessToken}
             selectedPlaylist={selectedPlaylist}
+            selectedPlaylistTracks={selectedPlaylistTracks}
             chooseTrack={chooseTrack}
             selectedTrack={selectedTrack}
             spotifyApi={spotifyApi}

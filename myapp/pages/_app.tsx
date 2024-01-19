@@ -1,8 +1,7 @@
-import { ChakraProvider, extendTheme } from '@chakra-ui/react'
+import { ChakraProvider } from '@chakra-ui/react'
 import App from '../components/App'
 import 'reset-css'
-
-const theme = extendTheme({})
+import theme from './theme'
 
 const MyApp = ({ Component, pageProps }) => {
   return (

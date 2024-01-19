@@ -5,11 +5,9 @@ const Playlists = ({ playlists, choosePlaylist, selectedPlaylist }) => {
   return (
     <Flex
       width="100%"
-      // height="100%"
-      bg="green"
+      bg="$spotify-dark-grey"
       paddingX="0px"
       color="gray"
-      // bottom="0"
       id="Playlists"
       flexDirection="column"
     >

@@ -11,6 +11,8 @@ export default function Track({ track, chooseTrack }) {
       flexDirection="row"
       style={{ cursor: 'pointer' }}
       onClick={handlePlay}
+      _hover={{ bg: 'brand.hover' }}
+      color={'white'}
     >
       <img src={track.albumUrl} style={{ height: '64px', width: '64px' }} />
       <Box id="ml-3">

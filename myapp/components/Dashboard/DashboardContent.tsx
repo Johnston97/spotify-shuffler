@@ -6,12 +6,13 @@ const DashboardContent = ({
   playlist,
   chooseTrack,
   selectedTrack,
+  choosePlaylistTracks,
 }) => {
   if (!playlist) {
     return (
       <Flex
         width="100%"
-        bg="darkblue"
+        bg="dashboardBg"
         paddingY="0px"
         color="gray"
         height="100%"
@@ -25,11 +26,11 @@ const DashboardContent = ({
     <Box
       id="DashboardContent"
       width="100%"
-      bg="antiquewhite"
       paddingY="0px"
       color="black"
       height="100%"
       flexDirection="row"
+      bg="dashboardBg"
     >
       <Box id="PlaylistTitle" bg="cyan.700">
         <Box>
@@ -40,12 +41,13 @@ const DashboardContent = ({
         </Box>
         {playlist.name}
       </Box>
-      <Flex id="PlaylistContent" bg="darkgreen">
+      <Flex id="PlaylistContent" bg="brand.dashboardBg">
         <Playlist
           spotifyApi={spotifyApi}
           playlist={playlist}
           chooseTrack={chooseTrack}
           selectedTrack={selectedTrack}
+          choosePlaylistTracks={choosePlaylistTracks}
         ></Playlist>
       </Flex>
     </Box>

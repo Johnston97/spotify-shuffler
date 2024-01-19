@@ -9,15 +9,14 @@ const Player = ({
   spotifyApi,
   selectedPlaylist,
   chooseTrack,
+  selectedPlaylistTracks,
 }) => {
-  const [play, setPlay] = useState(false)
-  useEffect(() => setPlay(true), [selectedTrack])
   if (!accessToken) return null
 
   return (
     <Box
       width="100%"
-      bg="lavenderblush"
+      bg="rgba(0,0,0,255)"
       paddingX="0px"
       color="gray"
       id="PlayerContainer"
@@ -35,11 +34,11 @@ const Player = ({
       /> */}
       <WebPlayback
         accessToken={accessToken}
-        play={play}
         selectedPlaylist={selectedPlaylist}
         selectedTrack={selectedTrack}
         spotifyApi={spotifyApi}
         chooseTrack={chooseTrack}
+        selectedPlaylistTracks={selectedPlaylistTracks}
       />
     </Box>
   )

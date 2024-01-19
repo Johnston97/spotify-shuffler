@@ -28,6 +28,7 @@
     "next": "^12.2.5",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
+    "react-scrollbars-custom": "^4.1.1",
     "react-spotify-web-playback": "^0.14.2",
     "reset-css": "^5.0.2",
     "spotify-web-api-node": "^5.0.2",

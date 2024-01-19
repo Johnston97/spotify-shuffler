@@ -3,7 +3,13 @@ import { useCallback, useEffect, useRef, useState } from 'react'
 import useTracks from '../Helpers/useTracks'
 import Track from './Track'
 
-const Playlist = ({ spotifyApi, playlist, chooseTrack, selectedTrack }) => {
+const Playlist = ({
+  spotifyApi,
+  playlist,
+  chooseTrack,
+  selectedTrack,
+  choosePlaylistTracks,
+}) => {
   const [pageNumber, setPageNumber] = useState(0)
   const [maxPageNumber, setMaxPageNumber] = useState(0)
   // const [shuffleNo, setShuffleNo] = useState(0)
@@ -12,6 +18,11 @@ const Playlist = ({ spotifyApi, playlist, chooseTrack, selectedTrack }) => {
     playlist,
     pageNumber
   )
+  useEffect(() => {}, [hasMore, loading])
+
+  useEffect(() => {
+    choosePlaylistTracks(playlistTracks)
+  }, [playlistTracks])
 
   // const track = useTrack(spotifyApi, playlist, shuffleNo)
 
@@ -42,16 +53,16 @@ const Playlist = ({ spotifyApi, playlist, chooseTrack, selectedTrack }) => {
     <Flex
       width="100%"
       height="100%"
-      bg="azure"
+      bg="dashboardBg"
       color="gray"
       id="PlaylistTracks"
       flexDirection="column"
     >
       {playlistTracks.map((track, index) => {
-        let selectionColour = 'white'
+        let selectionColour = 'dashboardBg'
         if (selectedTrack != undefined) {
           if (track.uri === selectedTrack.uri) {
-            selectionColour = 'black'
+            selectionColour = 'selected'
           }
         }
         if (playlistTracks.length === index + 1)

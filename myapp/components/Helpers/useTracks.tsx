@@ -27,6 +27,7 @@ export default function useTracks(spotifyApi, playlist, pageNumber) {
         limit: limit,
       })
       .then((res) => {
+        console.log(res)
         setPlaylistTracks((prevTracks) => {
           return [
             ...prevTracks,
@@ -39,6 +40,9 @@ export default function useTracks(spotifyApi, playlist, pageNumber) {
                 title: item.track.name,
                 uri: item.track.uri,
                 albumUrl: smallestAlbumImage.url,
+                albumName: item.track.album.name,
+                dateAdded: item.added_at,
+                durationMs: item.track.duration_ms,
               }
             }),
           ]

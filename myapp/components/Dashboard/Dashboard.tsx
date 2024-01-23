@@ -13,7 +13,7 @@ const Dashboard = ({
   return (
     <Flex
       id="DashboardContainer"
-      bg="dashboardBg"
+      bg="brand.bgDark"
       width="calc(100vw - 600px)"
       margin="10px"
       flexDirection="column"

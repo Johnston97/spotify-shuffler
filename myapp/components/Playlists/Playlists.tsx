@@ -5,7 +5,7 @@ const Playlists = ({ playlists, choosePlaylist, selectedPlaylist }) => {
   return (
     <Flex
       width="100%"
-      bg="$spotify-dark-grey"
+      bg="brand.bgDark"
       paddingX="0px"
       color="gray"
       id="Playlists"

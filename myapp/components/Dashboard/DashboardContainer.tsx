@@ -29,6 +29,7 @@ const DashboardContainer = ({ accessToken }) => {
   }
 
   function chooseTrack(track) {
+    console.log('Selected track', track)
     setSelectedTrack(track)
   }
 

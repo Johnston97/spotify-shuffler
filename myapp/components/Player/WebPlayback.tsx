@@ -18,7 +18,6 @@ const WebPlayback = ({
 
   useEffect(() => {
     if (!selectedTrack || !deviceId || !isActive) return
-    console.log(selectedTrack, deviceId, isActive)
     if (nextTrack) {
       selectedTrack = nextTrack
     }
@@ -27,7 +26,7 @@ const WebPlayback = ({
     }
     setNextTrack(undefined)
     setPreviousTrack(undefined)
-    chooseTrack(selectedTrack)
+    // chooseTrack(selectedTrack)
     playSong(
       selectedTrack.uri,
       spotifyApi,

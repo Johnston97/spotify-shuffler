@@ -14,11 +14,18 @@ export default function Track({ track, chooseTrack }) {
       _hover={{ bg: 'brand.hover' }}
       color={'white'}
     >
-      <img src={track.albumUrl} style={{ height: '64px', width: '64px' }} />
-      <Box id="ml-3">
-        <Box id="h5">{track.title}</Box>
-        <Box id="">{track.artist}</Box>
-      </Box>
+      <tr>
+        <td>0</td>
+        <td>
+          <img src={track.albumUrl} style={{ height: '64px', width: '64px' }} />
+          {track.title}
+          {track.artist}
+        </td>
+        <td>album</td>
+        <td>trackLength</td>
+      </tr>
+      {/* <Box id="h5">{track.title}</Box>
+      <Box id="">{track.artist}</Box> */}
     </Flex>
   )
 }

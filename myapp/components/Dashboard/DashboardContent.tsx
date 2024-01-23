@@ -1,4 +1,4 @@
-import { Box, Flex } from '@chakra-ui/layout'
+import { Box, Flex, Text } from '@chakra-ui/layout'
 import Playlist from '../Playlists/Playlist'
 
 const DashboardContent = ({
@@ -12,7 +12,7 @@ const DashboardContent = ({
     return (
       <Flex
         width="100%"
-        bg="dashboardBg"
+        bg="brand.bgDark"
         paddingY="0px"
         color="gray"
         height="100%"
@@ -23,25 +23,35 @@ const DashboardContent = ({
     )
   }
   return (
-    <Box
+    <Flex
       id="DashboardContent"
       width="100%"
       paddingY="0px"
-      color="black"
+      color="brand.basicWhite"
       height="100%"
-      flexDirection="row"
-      bg="dashboardBg"
+      flexDirection="column"
+      bg="brand.bgDark"
     >
-      <Box id="PlaylistTitle" bg="cyan.700">
-        <Box>
+      <Flex id="PlaylistTitle">
+        <Box paddingLeft={'25px'} paddingTop={'25px'}>
           <img
-            src={playlist.albumUrl}
-            style={{ height: '128px', width: '128px' }}
+            src={playlist.largeAlbumUrl}
+            style={{ height: '175px', width: '175px' }}
           />
         </Box>
-        {playlist.name}
-      </Box>
-      <Flex id="PlaylistContent" bg="brand.dashboardBg">
+        <Flex paddingTop="75px" paddingLeft={'15px'} flexDirection={'column'}>
+          <Box>
+            <Text fontSize="5xl">{playlist.name}</Text>
+          </Box>
+          <Box>
+            <Text fontSize="">{playlist.totalTracks + ' songs'}</Text>
+          </Box>
+          <Box>
+            <Text fontSize="">{playlist.totalTracks + ' s'}</Text>
+          </Box>
+        </Flex>
+      </Flex>
+      <Flex id="PlaylistContent">
         <Playlist
           spotifyApi={spotifyApi}
           playlist={playlist}
@@ -50,7 +60,7 @@ const DashboardContent = ({
           choosePlaylistTracks={choosePlaylistTracks}
         ></Playlist>
       </Flex>
-    </Box>
+    </Flex>
   )
 }
 

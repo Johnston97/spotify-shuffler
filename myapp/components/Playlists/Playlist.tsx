@@ -2,6 +2,16 @@ import { Box, Flex } from '@chakra-ui/layout'
 import { useCallback, useEffect, useRef, useState } from 'react'
 import useTracks from '../Helpers/useTracks'
 import Track from './Track'
+import {
+  Table,
+  TableContainer,
+  Tbody,
+  Td,
+  Th,
+  Thead,
+  Tr,
+  Image,
+} from '@chakra-ui/react'
 
 const Playlist = ({
   spotifyApi,
@@ -18,7 +28,6 @@ const Playlist = ({
     playlist,
     pageNumber
   )
-  useEffect(() => {}, [hasMore, loading])
 
   useEffect(() => {
     choosePlaylistTracks(playlistTracks)
@@ -49,36 +58,146 @@ const Playlist = ({
     [loading, hasMore]
   )
 
+  // Need a better helper function to dtermine if minutes, hours or days should be displayed
+  function weeksBetween(d1, d2) {
+    return Math.abs(Math.round((d2 - d1) / (7 * 24 * 60 * 60 * 1000)))
+  }
+
+  function daysBetween(d1, d2) {
+    return Math.abs(Math.round((d2 - d1) / (24 * 60 * 60 * 1000)))
+  }
+
   return (
     <Flex
       width="100%"
       height="100%"
-      bg="dashboardBg"
-      color="gray"
+      bg="brand.bgDark"
+      color="brand.subTitle"
       id="PlaylistTracks"
       flexDirection="column"
     >
-      {playlistTracks.map((track, index) => {
-        let selectionColour = 'dashboardBg'
-        if (selectedTrack != undefined) {
-          if (track.uri === selectedTrack.uri) {
-            selectionColour = 'selected'
-          }
-        }
-        if (playlistTracks.length === index + 1)
-          return (
-            <Box ref={lastTrackElementRef} key={index} bg={selectionColour}>
-              <Track track={track} chooseTrack={chooseTrack} />
-            </Box>
-          )
-        else {
-          return (
-            <Box key={index} bg={selectionColour}>
-              <Track track={track} chooseTrack={chooseTrack} />
-            </Box>
-          )
-        }
-      })}
+      <TableContainer id="TableContainer">
+        <Table variant="unstyled" layout="fixed">
+          <Thead id="TableHead">
+            <Tr color="brand.subTitle">
+              <Th width={'2%'} color="brand.subTitle">
+                #
+              </Th>
+              <Th width={'25%'} color="brand.subTitle">
+                Title
+              </Th>
+              <Th maxWidth={'20%'} color="brand.subTitle">
+                Album
+              </Th>
+              <Th>Date added</Th>
+              <Th>Track length</Th>
+            </Tr>
+          </Thead>
+          <Tbody id="TableBody">
+            {playlistTracks.map((track, index) => {
+              let selectionColour = 'brand.bgDark'
+              if (selectedTrack != undefined) {
+                if (track.uri === selectedTrack.uri) {
+                  selectionColour = 'brand.selected'
+                }
+              }
+              const date = new Date(track.durationMs)
+              const daysSince = daysBetween(
+                new Date(),
+                new Date(track.dateAdded)
+              )
+
+              if (playlistTracks.length === index + 1)
+                return (
+                  <Tr
+                    ref={lastTrackElementRef}
+                    key={index}
+                    bg={selectionColour}
+                    onClick={() => chooseTrack(track)}
+                    style={{ cursor: 'pointer' }}
+                    _hover={{ bg: 'brand.hover' }}
+                  >
+                    <Td>
+                      <Box
+                        marginLeft={'7px'}
+                        style={{ textAlignLast: 'right', direction: 'rtl' }}
+                      >
+                        {index + 1}
+                      </Box>
+                    </Td>
+                    <Td>
+                      <Flex width={'25%'}>
+                        <Image
+                          src={track.albumUrl}
+                          style={{ height: '40px', width: '40px' }}
+                        />
+                        <Box paddingLeft={'10px'} paddingTop={'0px'}>
+                          <Box color="brand.basicWhite">{track.title}</Box>
+                          <Box>{track.artist}</Box>
+                        </Box>
+                      </Flex>
+                    </Td>
+                    <Td>{track.albumName}</Td>
+                    <Td>{daysSince + ' days ago'}</Td>
+                    <Td>
+                      {date.getMinutes() +
+                        ':' +
+                        (date.getSeconds() < 10 ? '0' : '') +
+                        date.getSeconds()}
+                    </Td>
+                  </Tr>
+                )
+              else {
+                return (
+                  <Tr
+                    key={index}
+                    bg={selectionColour}
+                    onClick={() => chooseTrack(track)}
+                    style={{ cursor: 'pointer' }}
+                    _hover={{ bg: 'brand.hover' }}
+                  >
+                    <Td>
+                      <Box
+                        marginLeft={'7px'}
+                        style={{ textAlignLast: 'right', direction: 'rtl' }}
+                      >
+                        {index + 1}
+                      </Box>
+                    </Td>
+                    <Td>
+                      <Flex width={'25%'}>
+                        <Image
+                          src={track.albumUrl}
+                          style={{ height: '40px', width: '40px' }}
+                        />
+                        <Box paddingLeft={'10px'} paddingTop={'0px'}>
+                          <Box color="brand.basicWhite">{track.title}</Box>
+                          <Box>{track.artist}</Box>
+                        </Box>
+                      </Flex>
+                    </Td>
+                    <Td
+                      overflow={'hidden'}
+                      text-overflow={'ellipsis'}
+                      white-space={'nowrap'}
+                    >
+                      {track.albumName}
+                    </Td>
+                    <Td>{daysSince + ' days ago'}</Td>
+                    <Td>
+                      {date.getMinutes() +
+                        ':' +
+                        (date.getSeconds() < 10 ? '0' : '') +
+                        date.getSeconds()}
+                    </Td>{' '}
+                  </Tr>
+                )
+              }
+            })}
+          </Tbody>
+        </Table>
+      </TableContainer>
+
       <div>{loading && 'loading...'} </div>
     </Flex>
   )

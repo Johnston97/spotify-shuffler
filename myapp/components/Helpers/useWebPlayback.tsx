@@ -56,7 +56,7 @@ const useWebPlayback = (accessToken: string) => {
 
       // Works from other pc, how to trigger from app?
       player.addListener('player_state_changed', (state) => {
-        console.log('State change', state)
+        // console.log('State change', state)
         if (!state) {
           return
         }

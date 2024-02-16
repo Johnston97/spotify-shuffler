@@ -3,12 +3,12 @@ import { Textarea } from '@chakra-ui/react'
 
 const SearchBar = () => {
   return (
-    <Flex width="100%" bg="pink" paddingY="0px" color="gray">
-      <Box id="NavigationButtons">Navigation Buttons</Box>
+    <Flex width="100%" bg="brand.bgDark" paddingY="0px" color="gray">
+      <Box id="NavigationButtons"></Box>
       <Box id="SearchBar" width="100%">
-        <Textarea placeholder="What do you want to listen to?" />
+        {/* <Textarea placeholder="What do you want to listen to?" /> */}
       </Box>
-      <Box id="Profile">Profile</Box>
+      <Box id="Profile"></Box>
     </Flex>
   )
 }

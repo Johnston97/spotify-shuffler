@@ -11,7 +11,9 @@ import {
   Thead,
   Tr,
   Image,
+  Text,
 } from '@chakra-ui/react'
+import React from 'react'
 
 const Playlist = ({
   spotifyApi,
@@ -22,7 +24,6 @@ const Playlist = ({
 }) => {
   const [pageNumber, setPageNumber] = useState(0)
   const [maxPageNumber, setMaxPageNumber] = useState(0)
-  // const [shuffleNo, setShuffleNo] = useState(0)
   const { playlistTracks, hasMore, loading } = useTracks(
     spotifyApi,
     playlist,
@@ -57,14 +58,69 @@ const Playlist = ({
     },
     [loading, hasMore]
   )
+  const getRef = (playlistTracks, index) => {
+    return playlistTracks.length === index + 1
+      ? lastTrackElementRef
+      : React.createRef()
+  }
 
   // Need a better helper function to dtermine if minutes, hours or days should be displayed
-  function weeksBetween(d1, d2) {
+  function getWeeksBetween(d1, d2) {
     return Math.abs(Math.round((d2 - d1) / (7 * 24 * 60 * 60 * 1000)))
   }
 
-  function daysBetween(d1, d2) {
+  function getDaysBetween(d1, d2) {
     return Math.abs(Math.round((d2 - d1) / (24 * 60 * 60 * 1000)))
+  }
+
+  function getHoursBetween(d1, d2) {
+    return Math.abs(Math.round((d2 - d1) / (60 * 60 * 1000)))
+  }
+
+  function getMinutesBetween(d1, d2) {
+    return Math.abs(Math.round((d2 - d1) / (60 * 1000)))
+  }
+
+  // function secondsBetween(d1, d2) {
+  //   return Math.abs(Math.round((d2 - d1) / (1000)))
+  // }
+
+  const monthNames = [
+    'Jan',
+    'Feb',
+    'Mar',
+    'Apr',
+    'May',
+    'Jun',
+    'Jul',
+    'Aug',
+    'Sep',
+    'Oct',
+    'Nov',
+    'Dec',
+  ]
+
+  function getDateAddedFormatted(d1, dateAdded) {
+    const d2 = new Date(dateAdded)
+    const minutesBetween = getMinutesBetween(d1, d2)
+    if (minutesBetween < 60) {
+      return minutesBetween + ' minutes ago'
+    }
+    const hoursBetween = getHoursBetween(d1, d2)
+    if (hoursBetween < 24) {
+      return hoursBetween + ' hours ago'
+    }
+    const daysBetween = getDaysBetween(d1, d2)
+    if (daysBetween < 7) {
+      return daysBetween + ' days ago'
+    }
+    const weeksBetween = getWeeksBetween(d1, d2)
+    if (weeksBetween < 4) {
+      return weeksBetween + ' weeks ago'
+    }
+    const date = dateAdded.split('T')[0]
+    const [year, month, day] = date.split('-')
+    return monthNames[month - 1] + ' ' + day + ', ' + year
   }
 
   return (
@@ -102,97 +158,63 @@ const Playlist = ({
                 }
               }
               const date = new Date(track.durationMs)
-              const daysSince = daysBetween(
+              const dateAdded = getDateAddedFormatted(
                 new Date(),
-                new Date(track.dateAdded)
+                track.dateAdded
               )
 
-              if (playlistTracks.length === index + 1)
-                return (
-                  <Tr
-                    ref={lastTrackElementRef}
-                    key={index}
-                    bg={selectionColour}
-                    onClick={() => chooseTrack(track)}
-                    style={{ cursor: 'pointer' }}
-                    _hover={{ bg: 'brand.hover' }}
-                  >
-                    <Td>
-                      <Box
-                        marginLeft={'7px'}
-                        style={{ textAlignLast: 'right', direction: 'rtl' }}
-                      >
-                        {index + 1}
-                      </Box>
-                    </Td>
-                    <Td>
-                      <Flex width={'25%'}>
-                        <Image
-                          src={track.albumUrl}
-                          style={{ height: '40px', width: '40px' }}
-                        />
-                        <Box paddingLeft={'10px'} paddingTop={'0px'}>
-                          <Box color="brand.basicWhite">{track.title}</Box>
-                          <Box>{track.artist}</Box>
-                        </Box>
-                      </Flex>
-                    </Td>
-                    <Td>{track.albumName}</Td>
-                    <Td>{daysSince + ' days ago'}</Td>
-                    <Td>
-                      {date.getMinutes() +
-                        ':' +
-                        (date.getSeconds() < 10 ? '0' : '') +
-                        date.getSeconds()}
-                    </Td>
-                  </Tr>
-                )
-              else {
-                return (
-                  <Tr
-                    key={index}
-                    bg={selectionColour}
-                    onClick={() => chooseTrack(track)}
-                    style={{ cursor: 'pointer' }}
-                    _hover={{ bg: 'brand.hover' }}
-                  >
-                    <Td>
-                      <Box
-                        marginLeft={'7px'}
-                        style={{ textAlignLast: 'right', direction: 'rtl' }}
-                      >
-                        {index + 1}
-                      </Box>
-                    </Td>
-                    <Td>
-                      <Flex width={'25%'}>
-                        <Image
-                          src={track.albumUrl}
-                          style={{ height: '40px', width: '40px' }}
-                        />
-                        <Box paddingLeft={'10px'} paddingTop={'0px'}>
-                          <Box color="brand.basicWhite">{track.title}</Box>
-                          <Box>{track.artist}</Box>
-                        </Box>
-                      </Flex>
-                    </Td>
-                    <Td
-                      overflow={'hidden'}
-                      text-overflow={'ellipsis'}
-                      white-space={'nowrap'}
+              return (
+                <Tr
+                  ref={getRef(playlistTracks, index)}
+                  key={index}
+                  bg={selectionColour}
+                  onClick={() => chooseTrack(track)}
+                  style={{ cursor: 'pointer' }}
+                  _hover={{ bg: 'brand.hover' }}
+                  id="PlaylistRow"
+                >
+                  <Td id="TrackIndexData" rounded="md">
+                    <Box
+                      verticalAlign={'middle'}
+                      marginLeft={'7px'}
+                      style={{ textAlignLast: 'right', direction: 'rtl' }}
                     >
-                      {track.albumName}
-                    </Td>
-                    <Td>{daysSince + ' days ago'}</Td>
-                    <Td>
-                      {date.getMinutes() +
-                        ':' +
-                        (date.getSeconds() < 10 ? '0' : '') +
-                        date.getSeconds()}
-                    </Td>{' '}
-                  </Tr>
-                )
-              }
+                      {index + 1}
+                    </Box>
+                  </Td>
+                  <Td id="TrackData">
+                    <Flex width={'100%'}>
+                      <Image
+                        rounded="md"
+                        src={track.albumUrl}
+                        style={{ height: '40px', width: '40px' }}
+                      />
+                      <Box
+                        paddingLeft={'10px'}
+                        paddingTop={'0px'}
+                        maxWidth={'100%'}
+                      >
+                        <Box color="brand.basicWhite">
+                          <Text isTruncated>{track.title}</Text>
+                        </Box>
+                        <Box>
+                          <Text isTruncated>{track.artist}</Text>
+                        </Box>
+                      </Box>
+                    </Flex>
+                  </Td>
+                  <Td>
+                    <Text isTruncated>{track.albumName}</Text>
+                  </Td>
+                  <Td>{dateAdded}</Td>
+                  <Td rounded="md">
+                    {date.getMinutes() +
+                      ':' +
+                      (date.getSeconds() < 10 ? '0' : '') +
+                      date.getSeconds()}
+                  </Td>
+                </Tr>
+              )
             })}
           </Tbody>
         </Table>

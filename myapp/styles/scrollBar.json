@@ -6,7 +6,12 @@
     "width": "6px"
   },
   "&::-webkit-scrollbar-thumb": {
-    "background": "Grey",
+    "background": "transparent",
     "borderRadius": "24px"
+  },
+  ":hover": {
+    "&::-webkit-scrollbar-thumb": {
+      "background": "Grey"
+    }
   }
 }

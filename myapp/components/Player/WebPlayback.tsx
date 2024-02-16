@@ -11,10 +11,14 @@ const WebPlayback = ({
   chooseTrack,
   selectedPlaylistTracks,
 }: WebPlayBackProps) => {
-  const [nextTrack, setNextTrack] = useState()
-  const [previousTrack, setPreviousTrack] = useState()
+  const [nextTrack, setNextTrack] = useState(selectedTrack)
+  const [previousTrack, setPreviousTrack] = useState(selectedTrack)
+  const [shuffle, setShuffle] = useState(false)
 
-  const { player, deviceId, isActive, isPaused } = useWebPlayback(accessToken)
+  const { player, deviceId, isActive, isPaused } = useWebPlayback(
+    accessToken,
+    shuffle
+  )
 
   useEffect(() => {
     if (!selectedTrack || !deviceId || !isActive) return
@@ -22,11 +26,21 @@ const WebPlayback = ({
       selectedTrack = nextTrack
     }
     if (previousTrack) {
+      if (selectedTrack.uri === previousTrack.uri) return
       selectedTrack = previousTrack
     }
     setNextTrack(undefined)
     setPreviousTrack(undefined)
-    // chooseTrack(selectedTrack)
+    if (shuffle) {
+      console.log(selectedPlaylistTracks)
+      setPreviousTrack(selectedTrack)
+      selectedTrack =
+        selectedPlaylistTracks[
+          getRandomInt(0, selectedPlaylistTracks.length) - 1
+        ]
+      console.log(selectedTrack)
+      chooseTrack(selectedTrack)
+    }
     playSong(
       selectedTrack.uri,
       spotifyApi,
@@ -34,7 +48,18 @@ const WebPlayback = ({
       selectedPlaylist.uri,
       player
     )
-  }, [selectedTrack, nextTrack, previousTrack, isActive])
+  }, [selectedTrack, nextTrack, previousTrack, isActive, shuffle])
+
+  function handleShuffle() {
+    console.log('selected shuffle')
+    setShuffle(!shuffle)
+  }
+
+  function getRandomInt(min, max) {
+    min = Math.ceil(min)
+    max = Math.floor(max)
+    return Math.floor(Math.random() * (max - min) + min) //The maximum is exclusive and the minimum is inclusive
+  }
 
   if (!isActive) {
     return (
@@ -79,6 +104,13 @@ const WebPlayback = ({
           </Box>
         </Flex>
         <Flex id="Player" width="60%" justifyContent="center">
+          <Box marginRight={'20px'}>
+            {' '}
+            <button className="btn-spotify" onClick={handleShuffle}>
+              Shuffle
+            </button>
+          </Box>
+
           {/* <button
             className="btn-spotify"
             onClick={() => {

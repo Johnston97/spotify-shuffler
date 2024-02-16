@@ -12,6 +12,7 @@ export default function usePlaylists({ spotifyApi }) {
         offset: 0,
         limit: 1,
       })
+      console.log(res)
       setNoOfPlaylists(res.body.total)
     }
 
@@ -28,9 +29,7 @@ export default function usePlaylists({ spotifyApi }) {
         await spotifyApi
           .getUserPlaylists({ offset: batchNum * limit, limit })
           .then((res) => {
-            console.log(res)
             const items = res.body.items.map((playlist) => {
-              console.log(res)
               const smallestPlaylistImage = chooseSmallestImage(playlist.images)
               // 1st object may not be largest
               return {
@@ -45,6 +44,7 @@ export default function usePlaylists({ spotifyApi }) {
             tempPlaylists.push(...items)
           })
       }
+      console.log(tempPlaylists)
       setPlaylists(tempPlaylists)
     }
     getPlaylists()

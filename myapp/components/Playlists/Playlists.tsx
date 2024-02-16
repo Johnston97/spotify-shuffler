@@ -10,6 +10,8 @@ const Playlists = ({ playlists, choosePlaylist, selectedPlaylist }) => {
       color="gray"
       id="Playlists"
       flexDirection="column"
+      rounded="md"
+      overflow="hidden"
     >
       {playlists.map((playlist) => (
         <PlaylistOverview

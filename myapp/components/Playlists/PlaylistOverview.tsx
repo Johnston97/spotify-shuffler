@@ -1,4 +1,5 @@
 import { Box, Flex } from '@chakra-ui/layout'
+import { Image } from '@chakra-ui/react'
 
 const PlaylistOverview = ({ playlist, choosePlaylist, selectedPlaylist }) => {
   function handleSelection() {
@@ -7,18 +8,22 @@ const PlaylistOverview = ({ playlist, choosePlaylist, selectedPlaylist }) => {
 
   if (selectedPlaylist.name == playlist.name) {
     return (
-      <Box id="PlaylistOverview">
+      <Box id="PlaylistOverview" rounded="md" overflow="hidden">
         <Flex
           id="SelectedPlaylist"
           height="64px"
           bg="brand.selected"
           margin="10px"
           color={'white'}
+          width="calc(100% - 10px)"
+          rounded="md"
+          overflow="hidden"
         >
           <Box>
-            <img
+            <Image
+              rounded="md"
               src={playlist.albumUrl}
-              style={{ height: '64px', width: '64px' }}
+              style={{ height: '60px', width: '60px' }}
             />
           </Box>
           <Box margin="auto">{playlist.name}</Box>
@@ -27,28 +32,30 @@ const PlaylistOverview = ({ playlist, choosePlaylist, selectedPlaylist }) => {
     )
   }
   return (
-    <Box id="PlaylistOverview">
-      <Flex
-        id="Playlist"
-        height="64px"
-        bg="$spotify-dark-grey"
-        margin="10px"
-        style={{ cursor: 'pointer' }}
-        onClick={handleSelection}
-        _hover={{ bg: 'brand.hover' }}
-        color={'white'}
-      >
-        <Box>
-          <img
-            src={playlist.albumUrl}
-            style={{ height: '64px', width: '64px' }}
-          />
-        </Box>
-        <Box margin="auto" textAlign={'left'}>
-          {playlist.name}
-        </Box>
-      </Flex>
-    </Box>
+    <Flex
+      id="PlaylistOverview"
+      height="64px"
+      bg="brand.bgDark"
+      margin="10px"
+      style={{ cursor: 'pointer' }}
+      onClick={handleSelection}
+      _hover={{ bg: 'brand.hover' }}
+      color={'white'}
+      width="calc(100% - 10px)"
+      rounded="md"
+      overflow="hidden"
+    >
+      <Box>
+        <Image
+          rounded="md"
+          src={playlist.albumUrl}
+          style={{ height: '60px', width: '60px' }}
+        />
+      </Box>
+      <Box margin="auto" textAlign={'left'}>
+        {playlist.name}
+      </Box>
+    </Flex>
   )
 }
 

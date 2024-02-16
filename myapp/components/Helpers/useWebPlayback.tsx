@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react'
 
-const useWebPlayback = (accessToken: string) => {
+const useWebPlayback = (accessToken: string, shuffle: boolean) => {
   const [player, setPlayer] = useState(undefined)
   const [deviceId, setDeviceId] = useState('')
   const [isPaused, setPaused] = useState(false)

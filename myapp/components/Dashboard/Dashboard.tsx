@@ -17,6 +17,8 @@ const Dashboard = ({
       width="calc(100vw - 600px)"
       margin="10px"
       flexDirection="column"
+      rounded="md"
+      overflow="hidden"
     >
       <Box id="SearchBarWrapper">
         <SearchBar />

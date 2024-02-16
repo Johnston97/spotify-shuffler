@@ -26,6 +26,19 @@ const theme = {
       bg: '#9747FF',
     },
   },
+  styles: {
+    global: {
+      tbody: {
+        verticalAlign: 'revert !important',
+      },
+      tr: {
+        verticalAlign: 'revert !important',
+      },
+      td: {
+        verticalAlign: 'revert !important',
+      },
+    },
+  },
 }
 
 export default extendTheme(theme)

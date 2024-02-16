@@ -18,9 +18,11 @@ const FeedBar = () => {
     // </Box>
     <Box
       // height="100vh"
-      bg="antiquewhite"
+      bg="brand.bgDark"
       width="300px"
       margin="10px"
+      rounded="md"
+      overflow="hidden"
     >
       FeedBar
     </Box>

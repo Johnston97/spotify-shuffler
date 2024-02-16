@@ -6,10 +6,10 @@ const NavigatorContainer = () => {
     <Flex
       width="100%"
       height="calc(10vh)"
-      bg="blue"
+      bg="brand.bgDark"
       paddingX="5px"
       padding="5px"
-      color="gray"
+      color="brand.bgDark"
       id="NavigatorWrapper"
     >
       <SearchBar />

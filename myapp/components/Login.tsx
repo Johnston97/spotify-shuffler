@@ -1,6 +1,6 @@
 import React from 'react'
 import NextLink from 'next/link'
-import { Box } from '@chakra-ui/layout'
+import { Box, Flex } from '@chakra-ui/layout'
 import { Button } from '@chakra-ui/react'
 
 const authEndpoint = 'https://accounts.spotify.com/authorize'
@@ -22,10 +22,12 @@ const AUTH_URL = `${authEndpoint}?client_id=${clientId}&redirect_uri=${redirectU
 
 export default function Login() {
   return (
-    <Box>
+    <Flex width="100vw" height="100vh" bg="brand.bgDark">
       <NextLink href={AUTH_URL}>
-        <Button>Login With Spotify</Button>
+        <Box margin="auto">
+          <Button display="flex">Login With Spotify</Button>
+        </Box>
       </NextLink>
-    </Box>
+    </Flex>
   )
 }

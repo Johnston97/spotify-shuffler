@@ -2,7 +2,7 @@ import { Box, Flex } from '@chakra-ui/layout'
 import { useEffect, useState } from 'react'
 import SpotifyWebApi from 'spotify-web-api-node'
 import useWebPlayback from '../Helpers/useWebPlayback'
-
+import { Image } from '@chakra-ui/react'
 const WebPlayback = ({
   accessToken,
   selectedTrack,
@@ -48,7 +48,7 @@ const WebPlayback = ({
       selectedPlaylist.uri,
       player
     )
-  }, [selectedTrack, nextTrack, previousTrack, isActive, shuffle])
+  }, [isActive, shuffle])
 
   function handleShuffle() {
     console.log('selected shuffle')
@@ -88,11 +88,7 @@ const WebPlayback = ({
       <Flex id="WebPlaybackContainer" height="100%">
         <Flex id="Track" width="15%">
           <Box id="AlbumCover" paddingTop="15px" paddingLeft="15px">
-            <img
-              src={selectedTrack.albumUrl}
-              className="now-playing__cover"
-              alt=""
-            />
+            <Image src={selectedTrack.albumUrl} rounded="md" />
           </Box>
           <Box id="TrackInfo" paddingTop="20px" paddingLeft="15px">
             <div className="now-playing__side">

@@ -64,7 +64,6 @@ const Playlist = ({
       : React.createRef()
   }
 
-  // Need a better helper function to dtermine if minutes, hours or days should be displayed
   function getWeeksBetween(d1, d2) {
     return Math.abs(Math.round((d2 - d1) / (7 * 24 * 60 * 60 * 1000)))
   }
@@ -80,10 +79,6 @@ const Playlist = ({
   function getMinutesBetween(d1, d2) {
     return Math.abs(Math.round((d2 - d1) / (60 * 1000)))
   }
-
-  // function secondsBetween(d1, d2) {
-  //   return Math.abs(Math.round((d2 - d1) / (1000)))
-  // }
 
   const monthNames = [
     'Jan',

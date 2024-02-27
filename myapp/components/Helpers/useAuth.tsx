@@ -1,87 +1,73 @@
-import { useState, useEffect } from 'react'
-
-// const loginUrl = `${authEndpoint}?client_id=${clientId}&redirect_uri=${redirectUri}&scope=${scopes.join(
-//   "%20"
-// )}&response_type=token&show_dialog=true`;
+import { useState, useEffect, useCallback, useMemo } from 'react'
 
 export default function useAuth() {
   const [accessToken, setAccessToken] = useState()
-  // const [refreshToken, setRefreshToken] = useState();
+  const [refreshToken, setRefreshToken] = useState()
   const [expiresIn, setExpiresIn] = useState()
+  const [code, setCode] = useState(null)
 
-  // useEffect(() => {
-  //   fetch("http://localhost:4000/login", {
-  //     method: "POST",
-  //     body: JSON.stringify({ code }),
-  //     headers: { "Content-Type": "application/json" },
-  //   })
-  //     .then(async (res) => {
-  //       const response = await res.json();
-  //       if (res.status !== 200) {
-  //         console.log("Fail");
-  //       }
-  //       console.log("success token");
-  //       setAccessToken(response.body.access_token);
-  //       setRefreshToken(response.body.refresh_token);
-  //       setExpiresIn(600);
-  //       window.history.pushState({}, null, "/");
-  //     })
-  //     .catch((err) => {
-  //       console.log("Err", err);
-  //     });
-  // }, [code]);
+  const getToken = useCallback(async () => {
+    if (!code) {
+      return
+    }
+    const payload = {
+      method: 'POST',
+      body: JSON.stringify({ code }),
+    }
+
+    fetch('http://localhost:3000/api/auth?type=token', payload)
+      .then(async (res) => {
+        const response = await res.json()
+        setAccessToken(response.access_token)
+        setExpiresIn(response.expires_in)
+        setRefreshToken(response.refresh_token)
+      })
+      .catch((e) => {
+        console.log(e)
+      })
+  }, [code])
 
   useEffect(() => {
-    const responseUriParts = window.location.hash
-      .substring(1)
-      .split('&')
-      .reduce((initial, item) => {
-        const parts = item.split('=')
-        initial[parts[0]] = decodeURIComponent(parts[1])
-        return initial
-      }, {})
-    if (responseUriParts.access_token) {
-      console.log('token')
-      console.log(responseUriParts)
-      setAccessToken(responseUriParts.access_token)
-      setExpiresIn(responseUriParts.expires_in)
-      window.history.pushState({}, null, '/playlists')
+    getToken()
+  }, [getToken])
+
+  useMemo(() => {
+    if (typeof window === 'undefined') {
+      return
+    }
+    const urlParamss = new URLSearchParams(window.location.search)
+    if (urlParamss) {
+      const paramCode = urlParamss.get('code')
+      if (paramCode != code) setCode(paramCode)
     }
   }, [])
 
-  // useEffect(() => {
-  //   // spotifyApi.refreshAccessToken().then((res) => {
-  //   //   console.log(res);
-  //   // });
-  //   console.log('refresh')
-  // }, [expiresIn])
+  useEffect(() => {
+    if (!refreshToken || !expiresIn) return
+    const interval = setInterval(() => {
+      fetch('http://localhost:3000/api/auth?type=refresh', {
+        method: 'POST',
+        body: JSON.stringify({ refreshToken }),
+      })
+        .then(async (res) => {
+          const response = await res.json()
+          console.log('RESPONSE', response)
 
-  // useEffect(() => {
-  //   if (!refreshToken || !expiresIn) return;
-  //   const interval = setInterval(() => {
-  //     fetch("http://localhost:4000/refresh", {
-  //       method: "POST",
-  //       body: JSON.stringify({ refreshToken }),
-  //       headers: { "Content-Type": "application/json" },
-  //     })
-  //       .then(async (res) => {
-  //         const response = await res.json();
-
-  //         if (res.status !== 200) {
-  //           window.location = "/";
-  //         }
-  //         setAccessToken(response.body.access_token);
-  //         setExpiresIn(response.body.expires_in);
-  //         console.log("refresh token set");
-  //         window.history.pushState({}, null, "/");
-  //       })
-  //       .catch((err) => {
-  //         console.log("Err", err);
-  //         window.location = "/";
-  //       });
-  //   }, (expiresIn - 60) * 1000);
-  //   return () => clearInterval(interval);
-  // }, [expiresIn, refreshToken]);
+          if (res.status !== 200) {
+            // window.location = '/'
+          }
+          setAccessToken(response.access_token)
+          setExpiresIn(response.expires_in)
+          setRefreshToken(response.refresh_token)
+          window.history.pushState({}, null, '/')
+        })
+        .catch((err) => {
+          console.log('Err', err)
+          // window.location = '/'
+        })
+    }, (expiresIn - 60) * 1000)
+    return () => clearInterval(interval)
+  }, [refreshToken])
 
   return accessToken
 }

@@ -4,6 +4,7 @@
   "private": true,
   "scripts": {
     "dev": "next dev",
+    "dev-secure": "next dev --experimental-https",
     "build": "next build",
     "start": "next start",
     "lint": "next lint"
@@ -16,6 +17,7 @@
     "@emotion/styled": "^11.10.5",
     "@prisma/client": "^3.6.0",
     "@spotify/web-api-ts-sdk": "^1.1.2",
+    "@tanstack/react-table": "^8.12.0",
     "@types/spotify-api": "0.0.25",
     "@types/spotify-web-api-node": "^5.0.11",
     "bcrypt": "^5.0.1",
@@ -30,6 +32,7 @@
     "react-dom": "^18.2.0",
     "react-scrollbars-custom": "^4.1.1",
     "react-spotify-web-playback": "^0.14.2",
+    "react-table": "^7.8.0",
     "reset-css": "^5.0.2",
     "spotify-web-api-node": "^5.0.2",
     "swr": "^1.1.1",

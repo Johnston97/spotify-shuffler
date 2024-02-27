@@ -1,5 +1,5 @@
 import { Box } from '@chakra-ui/layout'
-import React, { useEffect, useState } from 'react'
+import React from 'react'
 // import SpotifyPlayer from '../../../react-spotify-web-playback/dist/index.js'
 import WebPlayback from '../Player/WebPlayback'
 
@@ -21,17 +21,6 @@ const Player = ({
       color="gray"
       id="PlayerContainer"
     >
-      {/* <SpotifyPlayer
-        hideAttribution={true}
-        hideCoverArt={true}
-        token={accessToken}
-        showSaveIcon={false}
-        callback={(state) => {
-          if (!state.isPlaying) setPlay(false)
-        }}
-        play={play}
-        uris={track.trackUri ? [track.trackUri] : []}
-      /> */}
       <WebPlayback
         accessToken={accessToken}
         selectedPlaylist={selectedPlaylist}

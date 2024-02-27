@@ -7,6 +7,7 @@ export default function usePlaylists({ spotifyApi }) {
 
   useEffect(() => {
     if (!spotifyApi.getCredentials().accessToken) return
+    console.log(spotifyApi.getCredentials().accessToken)
     const getNoOfPlaylists = async () => {
       const res = await spotifyApi.getUserPlaylists({
         offset: 0,

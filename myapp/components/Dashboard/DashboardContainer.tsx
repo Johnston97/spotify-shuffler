@@ -3,23 +3,10 @@ import SideBar from '../SideBar/SideBar'
 import FeedBar from '../SideBar/FeedBar'
 import PlayBarContainer from '../Player/PlayBarContainer'
 import Dashboard from './Dashboard'
-import SpotifyWebApi from 'spotify-web-api-node'
-import { useMemo, useState } from 'react'
+import { useState } from 'react'
 import usePlaylists from '../Helpers/usePlaylists'
 
-const redirectUri = process.env.REDIRECT_URI,
-  clientId = process.env.CLIENT_ID,
-  clientSecret = process.env.CLIENT_SECRET
-
-const credentials = {
-  clientId: clientId,
-  clientSecret: clientSecret,
-  redirectUri: redirectUri,
-}
-
-const spotifyApi = new SpotifyWebApi(credentials)
-
-const DashboardContainer = ({ accessToken }) => {
+const DashboardContainer = ({ spotifyApi, accessToken }) => {
   const [selectedPlaylist, setSelectedPlaylist] = useState('')
   const [selectedTrack, setSelectedTrack] = useState('')
   const [selectedPlaylistTracks, setSelectedPlaylistTracks] = useState('')
@@ -37,10 +24,10 @@ const DashboardContainer = ({ accessToken }) => {
     setSelectedPlaylistTracks(playlistTracks)
   }
 
-  useMemo(() => {
-    if (!accessToken) return
-    spotifyApi.setAccessToken(accessToken)
-  }, [accessToken])
+  // useMemo(() => {
+  //   if (!accessToken) return
+  //   spotifyApi.setAccessToken(accessToken)
+  // }, [accessToken])
 
   const playlists = usePlaylists({ spotifyApi })
 

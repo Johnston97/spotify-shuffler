@@ -14,6 +14,7 @@ export default function useTracks(spotifyApi, playlist, pageNumber) {
     setHasMore(true)
   }, [playlist])
 
+  // Remove pagination for other features
   useEffect(() => {
     if (!hasMore) return
     if (pageNumber != 0 && !hasMore) {

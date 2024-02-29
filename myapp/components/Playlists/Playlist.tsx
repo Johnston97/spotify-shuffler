@@ -14,8 +14,7 @@ import {
   Text,
 } from '@chakra-ui/react'
 import React from 'react'
-import { useTable, useSortBy } from 'react-table'
-import { createColumnHelper } from '@tanstack/react-table'
+import { getDateAddedFormatted } from '../Helpers/dates'
 
 const Playlist = ({
   spotifyApi,
@@ -31,9 +30,36 @@ const Playlist = ({
     playlist,
     pageNumber
   )
+  const [tableData, setTableData] = useState([])
+  const [sortField, setSortField] = useState('')
+  const [order, setOrder] = useState('asc')
 
   useEffect(() => {
     choosePlaylistTracks(playlistTracks)
+    setTableData(
+      playlistTracks.map((track) => {
+        const date = new Date(track.durationMs)
+        const formattedDateAdded = getDateAddedFormatted(
+          new Date(),
+          track.dateAdded
+        )
+        const trackLength =
+          date.getMinutes() +
+          ':' +
+          (date.getSeconds() < 10 ? '0' : '') +
+          date.getSeconds()
+        return {
+          title: track.title,
+          uri: track.uri,
+          artist: track.artist,
+          albumName: track.albumName,
+          albumUrl: track.albumUrl,
+          dateAdded: track.dateAdded,
+          formattedDateAdded: formattedDateAdded,
+          trackLength,
+        }
+      })
+    )
   }, [playlistTracks])
 
   // const track = useTrack(spotifyApi, playlist, shuffleNo)
@@ -66,58 +92,44 @@ const Playlist = ({
       : React.createRef()
   }
 
-  function getWeeksBetween(d1, d2) {
-    return Math.abs(Math.round((d2 - d1) / (7 * 24 * 60 * 60 * 1000)))
+  const handleSortingChange = (accessor) => {
+    const sortOrder = accessor === sortField && order === 'asc' ? 'desc' : 'asc'
+    setSortField(accessor)
+    setOrder(sortOrder)
+    handleSorting(accessor, sortOrder)
   }
 
-  function getDaysBetween(d1, d2) {
-    return Math.abs(Math.round((d2 - d1) / (24 * 60 * 60 * 1000)))
+  const handleSorting = (sortField, sortOrder) => {
+    if (sortField) {
+      const sorted = [...tableData].sort((a, b) => {
+        return (
+          a[sortField].toString().localeCompare(b[sortField].toString(), 'en', {
+            numeric: true,
+          }) * (sortOrder === 'asc' ? 1 : -1)
+        )
+      })
+      setTableData(sorted)
+    }
+    // } else {
+    //   const sorted = [...tableData].sort((a, b) => {
+    //     return (
+    //       a[sortField].toString().localeCompare(b[sortField].toString(), 'en', {
+    //         numeric: true,
+    //       }) * (sortOrder === 'asc' ? 1 : -1)
+    //     )
+    //   })
+    //   setTableData(sorted)
+    // }
   }
 
-  function getHoursBetween(d1, d2) {
-    return Math.abs(Math.round((d2 - d1) / (60 * 60 * 1000)))
-  }
-
-  function getMinutesBetween(d1, d2) {
-    return Math.abs(Math.round((d2 - d1) / (60 * 1000)))
-  }
-
-  const monthNames = [
-    'Jan',
-    'Feb',
-    'Mar',
-    'Apr',
-    'May',
-    'Jun',
-    'Jul',
-    'Aug',
-    'Sep',
-    'Oct',
-    'Nov',
-    'Dec',
-  ]
-
-  function getDateAddedFormatted(d1, dateAdded) {
-    const d2 = new Date(dateAdded)
-    const minutesBetween = getMinutesBetween(d1, d2)
-    if (minutesBetween < 60) {
-      return minutesBetween + ' minutes ago'
-    }
-    const hoursBetween = getHoursBetween(d1, d2)
-    if (hoursBetween < 24) {
-      return hoursBetween + ' hours ago'
-    }
-    const daysBetween = getDaysBetween(d1, d2)
-    if (daysBetween < 7) {
-      return daysBetween + ' days ago'
-    }
-    const weeksBetween = getWeeksBetween(d1, d2)
-    if (weeksBetween < 4) {
-      return weeksBetween + ' weeks ago'
-    }
-    const date = dateAdded.split('T')[0]
-    const [year, month, day] = date.split('-')
-    return monthNames[month - 1] + ' ' + day + ', ' + year
+  const getSortIcon = (accessor) => {
+    const cl =
+      sortField === accessor && order === 'asc'
+        ? '▲'
+        : sortField === accessor && order === 'desc'
+        ? '▼'
+        : ''
+    return cl
   }
 
   return (
@@ -131,35 +143,51 @@ const Playlist = ({
     >
       <TableContainer id="TableContainer">
         <Table variant="unstyled" layout="fixed">
-          <Thead id="TableHead">
-            <Tr color="brand.subTitle">
-              <Th width={'2%'} color="brand.subTitle">
-                #
-              </Th>
-              <Th width={'25%'} color="brand.subTitle">
-                Title
-              </Th>
-              <Th maxWidth={'20%'} color="brand.subTitle">
-                Album
-              </Th>
-              <Th>Date added</Th>
-              <Th>Track length</Th>
-            </Tr>
-          </Thead>
+          {
+            <Thead id="TableHead">
+              <Tr color="brand.subTitle">
+                <Th width={'2%'} color="brand.subTitle">
+                  #
+                </Th>
+                <Th
+                  width={'25%'}
+                  color="brand.subTitle"
+                  onClick={() => handleSortingChange('title')}
+                >
+                  <Text _hover={{ color: 'white' }}>
+                    Title {getSortIcon('title')}
+                  </Text>
+                </Th>
+                <Th
+                  maxWidth={'20%'}
+                  color="brand.subTitle"
+                  onClick={() => handleSortingChange('albumName')}
+                >
+                  <Text _hover={{ color: 'white' }}>
+                    Album {getSortIcon('albumName')}
+                  </Text>
+                </Th>
+                <Th onClick={() => handleSortingChange('dateAdded')}>
+                  <Text _hover={{ color: 'white' }}>
+                    Date added {getSortIcon('dateAdded')}
+                  </Text>
+                </Th>
+                <Th onClick={() => handleSortingChange('trackLength')}>
+                  <Text _hover={{ color: 'white' }}>
+                    Track length {getSortIcon('trackLength')}
+                  </Text>
+                </Th>
+              </Tr>
+            </Thead>
+          }
           <Tbody id="TableBody">
-            {playlistTracks.map((track, index) => {
+            {tableData.map((track, index) => {
               let selectionColour = 'brand.bgDark'
               if (selectedTrack != undefined) {
                 if (track.uri === selectedTrack.uri) {
                   selectionColour = 'brand.selected'
                 }
               }
-              const date = new Date(track.durationMs)
-              const dateAdded = getDateAddedFormatted(
-                new Date(),
-                track.dateAdded
-              )
-
               return (
                 <Tr
                   ref={getRef(playlistTracks, index)}
@@ -203,19 +231,15 @@ const Playlist = ({
                   <Td>
                     <Text isTruncated>{track.albumName}</Text>
                   </Td>
-                  <Td>{dateAdded}</Td>
-                  <Td rounded="md">
-                    {date.getMinutes() +
-                      ':' +
-                      (date.getSeconds() < 10 ? '0' : '') +
-                      date.getSeconds()}
-                  </Td>
+                  <Td>{track.formattedDateAdded}</Td>
+                  <Td rounded="md">{track.trackLength}</Td>
                 </Tr>
               )
             })}
           </Tbody>
         </Table>
       </TableContainer>
+      {/* <DataTable columns={columns} data={tableData} /> */}
 
       <div>{loading && 'loading...'} </div>
     </Flex>

@@ -5,11 +5,14 @@ import PlayBarContainer from '../Player/PlayBarContainer'
 import Dashboard from './Dashboard'
 import { useState } from 'react'
 import usePlaylists from '../Helpers/usePlaylists'
+import useMyProfile from '../Helpers/useMyProfile'
+import useProfile from '../Helpers/useProfile'
 
 const DashboardContainer = ({ spotifyApi, accessToken }) => {
-  const [selectedPlaylist, setSelectedPlaylist] = useState('')
+  const [selectedPlaylist, setSelectedPlaylist] = useState(null)
   const [selectedTrack, setSelectedTrack] = useState('')
   const [selectedPlaylistTracks, setSelectedPlaylistTracks] = useState('')
+  const myProfile = useMyProfile({ spotifyApi })
 
   function choosePlaylist(playlist) {
     setSelectedPlaylist(playlist)
@@ -46,6 +49,7 @@ const DashboardContainer = ({ spotifyApi, accessToken }) => {
             chooseTrack={chooseTrack}
             selectedTrack={selectedTrack}
             choosePlaylistTracks={choosePlaylistTracks}
+            myProfile={myProfile}
           ></Dashboard>
           <FeedBar></FeedBar>
         </Flex>
@@ -59,19 +63,6 @@ const DashboardContainer = ({ spotifyApi, accessToken }) => {
             spotifyApi={spotifyApi}
           />
         </Flex>
-      </Box>
-    )
-  } else {
-    return (
-      <Box width="100vw" height="100vh" bg="black" id="PageWrapper">
-        <Flex id="ApplicationWrapper" width="100%" height="90%">
-          <SideBar></SideBar>
-          <Dashboard></Dashboard>
-          <FeedBar></FeedBar>
-        </Flex>
-        <Box id="PlayerWrapper" width="100vw" height="10%">
-          <PlayBarContainer />
-        </Box>
       </Box>
     )
   }

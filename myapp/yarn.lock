@@ -3251,7 +3251,7 @@
   "resolved" "https://registry.npmjs.org/node-addon-api/-/node-addon-api-3.2.1.tgz"
   "version" "3.2.1"
 
-"node-fetch@^2.6.7":
+"node-fetch@^2.6.1", "node-fetch@^2.6.7":
   "integrity" "sha512-ZjMPFEfVx5j+y2yF35Kzx5sF7kDzxuDj6ziH4FFbOp87zKDZNx8yExJIb05OGF4Nlt9IHFIMBkRl41VdvcNdbQ=="
   "resolved" "https://registry.npmjs.org/node-fetch/-/node-fetch-2.6.7.tgz"
   "version" "2.6.7"
@@ -3827,6 +3827,13 @@
   "integrity" "sha512-MjZkVp0NHr5+TPihLcadqnlVoGIoWo4IBHptutGh9wI3ttUYvCG26HkSuDi+K6lsZ25syXJXcctwgyVCt//xqA=="
   "resolved" "https://registry.npmjs.org/source-map/-/source-map-0.5.6.tgz"
   "version" "0.5.6"
+
+"spotify-buddylist@^1.0.0":
+  "integrity" "sha512-RDzrhTPtcGgUflK4PuSBrTDUMchCfekltLgM2mL/ZlrY6B6/dIbCk7lo9niny9V0RwZrwopRR6MVlJp/BJVh3A=="
+  "resolved" "https://registry.npmjs.org/spotify-buddylist/-/spotify-buddylist-1.0.0.tgz"
+  "version" "1.0.0"
+  dependencies:
+    "node-fetch" "^2.6.1"
 
 "spotify-web-api-node@^5.0.2":
   "integrity" "sha512-r82dRWU9PMimHvHEzL0DwEJrzFk+SMCVfq249SLt3I7EFez7R+jeoKQd+M1//QcnjqlXPs2am4DFsGk8/GCsrA=="

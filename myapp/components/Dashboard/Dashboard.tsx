@@ -9,36 +9,62 @@ const Dashboard = ({
   chooseTrack,
   selectedTrack,
   choosePlaylistTracks,
+  myProfile,
 }) => {
-  return (
-    <Flex
-      id="DashboardContainer"
-      bg="brand.bgDark"
-      width="calc(100vw - 600px)"
-      margin="10px"
-      flexDirection="column"
-      rounded="md"
-      overflow="hidden"
-    >
-      <Box id="SearchBarWrapper">
-        <SearchBar />
-      </Box>
-      <Box
-        id="DashboardContentWrapper"
-        height="100%"
-        overflow="auto"
-        css={scrollBar}
+  console.log(playlist)
+  if (playlist) {
+    return (
+      <Flex
+        id="DashboardContainer"
+        bg="brand.bgDark"
+        width="calc(100vw - 600px)"
+        margin="10px"
+        flexDirection="column"
+        rounded="md"
+        overflow="hidden"
       >
-        <DashboardContent
-          spotifyApi={spotifyApi}
-          playlist={playlist}
-          chooseTrack={chooseTrack}
-          selectedTrack={selectedTrack}
-          choosePlaylistTracks={choosePlaylistTracks}
-        />
-      </Box>
-    </Flex>
-  )
+        <Box id="SearchBarWrapper">
+          <SearchBar myProfile={myProfile} />
+        </Box>
+        <Box
+          id="DashboardContentWrapper"
+          height="100%"
+          overflow="auto"
+          css={scrollBar}
+        >
+          <DashboardContent
+            spotifyApi={spotifyApi}
+            playlist={playlist}
+            chooseTrack={chooseTrack}
+            selectedTrack={selectedTrack}
+            choosePlaylistTracks={choosePlaylistTracks}
+          />
+        </Box>
+      </Flex>
+    )
+  } else {
+    return (
+      <Flex
+        id="DashboardContainer"
+        bg="brand.bgDark"
+        width="calc(100vw - 600px)"
+        margin="10px"
+        flexDirection="column"
+        rounded="md"
+        overflow="hidden"
+      >
+        <Box id="SearchBarWrapper">
+          <SearchBar myProfile={myProfile} />
+        </Box>
+        <Box
+          id="DashboardContentWrapper"
+          height="100%"
+          overflow="auto"
+          css={scrollBar}
+        ></Box>
+      </Flex>
+    )
+  }
 }
 
 export default Dashboard

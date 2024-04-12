@@ -6,7 +6,7 @@ const PlaylistOverview = ({ playlist, choosePlaylist, selectedPlaylist }) => {
     choosePlaylist(playlist)
   }
 
-  if (selectedPlaylist.name == playlist.name) {
+  if (selectedPlaylist && selectedPlaylist.name == playlist.name) {
     return (
       <Box id="PlaylistOverview" rounded="md" overflow="hidden">
         <Flex

@@ -13,7 +13,6 @@ export default function usePlaylists({ spotifyApi }) {
         offset: 0,
         limit: 1,
       })
-      console.log(res)
       setNoOfPlaylists(res.body.total)
     }
 
@@ -40,6 +39,7 @@ export default function usePlaylists({ spotifyApi }) {
                 largeAlbumUrl: playlist.images[0].url,
                 totalTracks: playlist.tracks.total,
                 uri: playlist.uri,
+                owner: playlist.owner,
               }
             })
             tempPlaylists.push(...items)

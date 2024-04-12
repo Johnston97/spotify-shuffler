@@ -5,7 +5,7 @@ import useAuth from './Helpers/useAuth'
 import { useCallback, useEffect, useState } from 'react'
 
 const spotifyApi = new SpotifyWebApi()
-
+// const api = buddyList.wrapWebApi(new SpotifyWebApi({ spDcCookie: process.env.SP_DC }))
 function App() {
   const [authUrl, setAuthUrl] = useState('')
 

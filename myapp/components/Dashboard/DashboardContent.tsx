@@ -1,6 +1,7 @@
 import { Box, Flex, Text } from '@chakra-ui/layout'
 import Playlist from '../Playlists/Playlist'
 import { Image } from '@chakra-ui/react'
+import useProfile from '../Helpers/useProfile'
 const DashboardContent = ({
   spotifyApi,
   playlist,
@@ -8,18 +9,10 @@ const DashboardContent = ({
   selectedTrack,
   choosePlaylistTracks,
 }) => {
-  if (!playlist) {
-    return (
-      <Flex
-        width="100%"
-        bg="brand.bgDark"
-        paddingY="0px"
-        color="gray"
-        height="100%"
-        id="DashboardContent"
-      ></Flex>
-    )
-  }
+  const selectedPlaylistOwner = useProfile({
+    spotifyApi,
+    userId: playlist.owner.id,
+  })
   return (
     <Flex
       id="DashboardContent"
@@ -44,9 +37,29 @@ const DashboardContent = ({
           <Box>
             <Text fontSize="5xl">{playlist.name}</Text>
           </Box>
-          <Box>
-            <Text fontSize="">{playlist.totalTracks + ' songs'}</Text>
-          </Box>
+          <Flex flexDirection="row">
+            <Box>
+              {' '}
+              <Image
+                rounded="md"
+                borderRadius="full"
+                aspectRatio="1/1"
+                objectFit="cover"
+                src={
+                  selectedPlaylistOwner
+                    ? selectedPlaylistOwner.images[0].url
+                    : '/assets/emptyProfile.png'
+                }
+                boxSize="36px"
+              />
+            </Box>
+            <Box paddingLeft={'5px'} paddingTop={'5px'}>
+              <Text fontSize="">{playlist.owner.display_name} · </Text>
+            </Box>
+            <Box paddingLeft={'5px'} paddingTop={'5px'}>
+              <Text fontSize="">{playlist.totalTracks + ' songs'}</Text>
+            </Box>
+          </Flex>
           <Box>
             {/* <Text fontSize="">{playlist.totalTracks + ' s'}</Text> 
             Remove pagination as need to query all tracks to get total length*/}

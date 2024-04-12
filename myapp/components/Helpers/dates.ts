@@ -47,6 +47,31 @@ export function getDateAddedFormatted(d1, dateAdded) {
   if (weeksBetween < 4) {
     return weeksBetween + ' weeks ago'
   }
+
+  const date = dateAdded.split('T')[0]
+  const [year, month, day] = date.split('-')
+  return monthNames[month - 1] + ' ' + day + ', ' + year
+}
+
+export function getDateAddedFormattedShort(d1, dateAdded) {
+  const d2 = new Date(dateAdded)
+  const minutesBetween = getMinutesBetween(d1, d2)
+  if (minutesBetween < 60) {
+    return minutesBetween + ' m'
+  }
+  const hoursBetween = getHoursBetween(d1, d2)
+  if (hoursBetween < 24) {
+    return hoursBetween + ' hr'
+  }
+  const daysBetween = getDaysBetween(d1, d2)
+  if (daysBetween < 7) {
+    return daysBetween + ' d'
+  }
+  const weeksBetween = getWeeksBetween(d1, d2)
+  if (weeksBetween < 4) {
+    return weeksBetween + ' w'
+  }
+
   const date = dateAdded.split('T')[0]
   const [year, month, day] = date.split('-')
   return monthNames[month - 1] + ' ' + day + ', ' + year

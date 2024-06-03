@@ -17,19 +17,15 @@ import React from 'react'
 import { getDateAddedFormatted } from '../Helpers/dates'
 
 const Playlist = ({
-  spotifyApi,
   playlist,
   chooseTrack,
   selectedTrack,
   choosePlaylistTracks,
+  accessToken,
 }) => {
   const [pageNumber, setPageNumber] = useState(0)
   const [maxPageNumber, setMaxPageNumber] = useState(0)
-  const { playlistTracks, hasMore, loading } = useTracks(
-    spotifyApi,
-    playlist,
-    pageNumber
-  )
+  const { playlistTracks, hasMore, loading } = useTracks(playlist, accessToken)
   const [tableData, setTableData] = useState([])
   const [sortField, setSortField] = useState('')
   const [order, setOrder] = useState('asc')

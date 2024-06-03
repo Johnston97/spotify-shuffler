@@ -10,6 +10,7 @@ const Dashboard = ({
   selectedTrack,
   choosePlaylistTracks,
   myProfile,
+  accessToken,
 }) => {
   console.log(playlist)
   if (playlist) {
@@ -38,6 +39,7 @@ const Dashboard = ({
             chooseTrack={chooseTrack}
             selectedTrack={selectedTrack}
             choosePlaylistTracks={choosePlaylistTracks}
+            accessToken={accessToken}
           />
         </Box>
       </Flex>

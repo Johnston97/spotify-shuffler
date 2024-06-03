@@ -16,15 +16,18 @@ export default function useFriends() {
             return y.timestamp - x.timestamp
           })
           if (friendActivity.length > 0) {
+            console.log('setting freind activity)')
             setFriendActivity(friendActivity)
           }
         })
         .catch((e) => {
           console.log(e)
+          setTimeout(() => {}, 60000)
+          return
         })
     }
     if (friendActivity.length === 0) {
-      getActivity()
+      console.log('No friend activity')
     }
     const interval = setInterval(getActivity, 60000)
     return () => {

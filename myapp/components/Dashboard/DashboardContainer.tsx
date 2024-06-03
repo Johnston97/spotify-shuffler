@@ -50,6 +50,7 @@ const DashboardContainer = ({ spotifyApi, accessToken }) => {
             selectedTrack={selectedTrack}
             choosePlaylistTracks={choosePlaylistTracks}
             myProfile={myProfile}
+            accessToken={accessToken}
           ></Dashboard>
           <FeedBar></FeedBar>
         </Flex>

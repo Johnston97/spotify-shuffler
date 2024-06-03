@@ -8,6 +8,7 @@ const DashboardContent = ({
   chooseTrack,
   selectedTrack,
   choosePlaylistTracks,
+  accessToken,
 }) => {
   const selectedPlaylistOwner = useProfile({
     spotifyApi,
@@ -68,11 +69,12 @@ const DashboardContent = ({
       </Flex>
       <Flex id="PlaylistContent">
         <Playlist
-          spotifyApi={spotifyApi}
+          // spotifyApi={spotifyApi}
           playlist={playlist}
           chooseTrack={chooseTrack}
           selectedTrack={selectedTrack}
           choosePlaylistTracks={choosePlaylistTracks}
+          accessToken={accessToken}
         ></Playlist>
       </Flex>
     </Flex>

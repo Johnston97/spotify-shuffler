@@ -1,7 +1,6 @@
 import { Box, Flex } from '@chakra-ui/layout'
 import { useCallback, useEffect, useRef, useState } from 'react'
 import useTracks from '../Helpers/useTracks'
-import Track from './Track'
 import {
   Table,
   TableContainer,
@@ -25,44 +24,49 @@ const Playlist = ({
 }) => {
   const [pageNumber, setPageNumber] = useState(0)
   const [maxPageNumber, setMaxPageNumber] = useState(0)
-  const { playlistTracks, hasMore, loading } = useTracks(playlist, accessToken)
+  const { playlistTracks, hasMore, loading } = useTracks(
+    playlist,
+    accessToken,
+    pageNumber
+  )
   const [tableData, setTableData] = useState([])
   const [sortField, setSortField] = useState('')
   const [order, setOrder] = useState('asc')
 
   useEffect(() => {
     choosePlaylistTracks(playlistTracks)
-    setTableData(
-      playlistTracks.map((track) => {
-        const date = new Date(track.durationMs)
-        const formattedDateAdded = getDateAddedFormatted(
-          new Date(),
-          track.dateAdded
-        )
-        const trackLength =
-          date.getMinutes() +
-          ':' +
-          (date.getSeconds() < 10 ? '0' : '') +
-          date.getSeconds()
-        return {
-          title: track.title,
-          uri: track.uri,
-          artist: track.artist,
-          albumName: track.albumName,
-          albumUrl: track.albumUrl,
-          dateAdded: track.dateAdded,
-          formattedDateAdded: formattedDateAdded,
-          trackLength,
-        }
-      })
-    )
+    if (playlistTracks.length > 0) {
+      setTableData(
+        playlistTracks.map((track) => {
+          const date = new Date(track.durationMs)
+          const formattedDateAdded = getDateAddedFormatted(
+            new Date(),
+            track.dateAdded
+          )
+          const trackLength =
+            date.getMinutes() +
+            ':' +
+            (date.getSeconds() < 10 ? '0' : '') +
+            date.getSeconds()
+          return {
+            title: track.title,
+            uri: track.uri,
+            artist: track.artist,
+            albumName: track.albumName,
+            albumUrl: track.albumUrl,
+            dateAdded: track.dateAdded,
+            formattedDateAdded: formattedDateAdded,
+            trackLength,
+          }
+        })
+      )
+    }
   }, [playlistTracks])
-
-  // const track = useTrack(spotifyApi, playlist, shuffleNo)
 
   useEffect(() => {
     setMaxPageNumber(playlist.totalTracks / 15 - 1)
     setPageNumber(0)
+    setTableData([])
   }, [playlist])
 
   const observer = useRef(null)
@@ -72,7 +76,6 @@ const Playlist = ({
       if (observer.current) observer.current.disconnect()
       observer.current = new IntersectionObserver((entries) => {
         if (entries[0].isIntersecting) {
-          console.log('visible')
           if (pageNumber < maxPageNumber) {
             setPageNumber(pageNumber + 1)
           }
@@ -106,16 +109,6 @@ const Playlist = ({
       })
       setTableData(sorted)
     }
-    // } else {
-    //   const sorted = [...tableData].sort((a, b) => {
-    //     return (
-    //       a[sortField].toString().localeCompare(b[sortField].toString(), 'en', {
-    //         numeric: true,
-    //       }) * (sortOrder === 'asc' ? 1 : -1)
-    //     )
-    //   })
-    //   setTableData(sorted)
-    // }
   }
 
   const getSortIcon = (accessor) => {
@@ -137,6 +130,34 @@ const Playlist = ({
       id="PlaylistTracks"
       flexDirection="column"
     >
+      <RenderTable
+        tableData={tableData}
+        isLoading={loading}
+        handleSortingChange={handleSortingChange}
+        getSortIcon={getSortIcon}
+        selectedTrack={selectedTrack}
+        getRef={getRef}
+        chooseTrack={chooseTrack}
+        playlistTracks={playlistTracks}
+      ></RenderTable>
+      <div>{loading && 'loading...'} </div>
+    </Flex>
+  )
+}
+
+function RenderTable(props) {
+  const {
+    tableData,
+    loading,
+    handleSortingChange,
+    getSortIcon,
+    selectedTrack,
+    getRef,
+    chooseTrack,
+    playlistTracks,
+  } = props
+  if (tableData.length > 0) {
+    return (
       <TableContainer id="TableContainer">
         <Table variant="unstyled" layout="fixed">
           {
@@ -235,11 +256,10 @@ const Playlist = ({
           </Tbody>
         </Table>
       </TableContainer>
-      {/* <DataTable columns={columns} data={tableData} /> */}
-
-      <div>{loading && 'loading...'} </div>
-    </Flex>
-  )
+    )
+  } else {
+    return <Flex>{loading ? 'Loading' : ''}</Flex>
+  }
 }
 
 export default Playlist

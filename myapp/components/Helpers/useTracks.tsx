@@ -2,18 +2,34 @@ import { useEffect, useState } from 'react'
 
 const limit = 15
 
-export default function useTracks(playlist, accessToken, pageNumber) {
+export default function useTracks(
+  playlist,
+  accessToken,
+  pageNumber,
+  isShuffle
+) {
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState(false)
   const [playlistTracks, setPlaylistTracks] = useState([])
+  const [chosenPlaylist, setChosenPlaylist] = useState('')
   const [hasMore, setHasMore] = useState(true)
 
   useEffect(() => {
+    console.log(
+      'Plaulist has changed' +
+        JSON.stringify(playlist) +
+        'pageNo' +
+        pageNumber +
+        'isShuffle' +
+        isShuffle
+    )
     setPlaylistTracks([])
+    setChosenPlaylist(playlist.id)
     setHasMore(true)
-  }, [playlist])
+  }, [playlist, isShuffle])
 
   useEffect(() => {
+    if (chosenPlaylist != playlist.id) return
     if (!hasMore) return
     if (pageNumber != 0 && !hasMore) {
       return
@@ -30,6 +46,7 @@ export default function useTracks(playlist, accessToken, pageNumber) {
         totalTracks: playlist.totalTracks,
         offset: limit * pageNumber,
         limit: limit,
+        isShuffle,
       },
     }
 
@@ -38,6 +55,7 @@ export default function useTracks(playlist, accessToken, pageNumber) {
         .then(async (res) => {
           const response = await res.json()
           if (response.tracks.length > 0) {
+            console.log(response.tracks)
             setPlaylistTracks([...playlistTracks, ...response.tracks])
             console.log(playlistTracks)
           }
@@ -51,6 +69,6 @@ export default function useTracks(playlist, accessToken, pageNumber) {
         })
     }
     fetchTracks()
-  }, [pageNumber, hasMore, playlist])
+  }, [pageNumber, hasMore, chosenPlaylist])
   return { playlistTracks, hasMore, loading, error }
 }

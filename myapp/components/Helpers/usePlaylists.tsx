@@ -29,6 +29,7 @@ export default function usePlaylists({ spotifyApi }) {
         await spotifyApi
           .getUserPlaylists({ offset: batchNum * limit, limit })
           .then((res) => {
+            // Error handling if null
             const items = res.body.items.map((playlist) => {
               const smallestPlaylistImage = chooseSmallestImage(playlist.images)
               // 1st object may not be largest

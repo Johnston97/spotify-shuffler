@@ -11,6 +11,7 @@ const Dashboard = ({
   choosePlaylistTracks,
   myProfile,
   accessToken,
+  isShuffle,
 }) => {
   console.log(playlist)
   if (playlist) {
@@ -40,6 +41,7 @@ const Dashboard = ({
             selectedTrack={selectedTrack}
             choosePlaylistTracks={choosePlaylistTracks}
             accessToken={accessToken}
+            isShuffle={isShuffle}
           />
         </Box>
       </Flex>

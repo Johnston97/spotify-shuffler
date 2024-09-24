@@ -1,8 +1,16 @@
 import { Box, Flex, Text } from '@chakra-ui/layout'
 import Playlists from '../Playlists/Playlists'
 import scrollBar from '../../styles/scrollBar.json'
+import { Button } from '@chakra-ui/react'
+import { useState } from 'react'
 
-const SideBar = ({ playlists, choosePlaylist, selectedPlaylist }) => {
+const SideBar = ({
+  playlists,
+  choosePlaylist,
+  selectedPlaylist,
+  isShuffle,
+  handleSetShuffle,
+}) => {
   if (playlists != undefined) {
     return (
       <Flex
@@ -13,7 +21,11 @@ const SideBar = ({ playlists, choosePlaylist, selectedPlaylist }) => {
         id="SideBarWrapper"
       >
         <Box id="Home" height="10%" bg="brand.bgDark" margin="10px">
-          Home
+          <Box paddingRight={'5px'}>
+            <Button type="button" onClick={handleSetShuffle}>
+              Shuffle - {isShuffle}
+            </Button>
+          </Box>
         </Box>
         <Box
           id="PlaylistsWrapper"

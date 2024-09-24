@@ -13,6 +13,12 @@ const DashboardContainer = ({ spotifyApi, accessToken }) => {
   const [selectedTrack, setSelectedTrack] = useState('')
   const [selectedPlaylistTracks, setSelectedPlaylistTracks] = useState('')
   const myProfile = useMyProfile({ spotifyApi })
+  const [isShuffle, setIsShuffle] = useState(true)
+
+  function handleSetShuffle() {
+    console.log('setting shuffle', isShuffle)
+    setIsShuffle((prevIsShuffle) => !prevIsShuffle)
+  }
 
   function choosePlaylist(playlist) {
     setSelectedPlaylist(playlist)
@@ -42,6 +48,8 @@ const DashboardContainer = ({ spotifyApi, accessToken }) => {
             playlists={playlists}
             choosePlaylist={choosePlaylist}
             selectedPlaylist={selectedPlaylist}
+            isShuffle={isShuffle}
+            handleSetShuffle={handleSetShuffle}
           ></SideBar>
           <Dashboard
             spotifyApi={spotifyApi}
@@ -51,6 +59,7 @@ const DashboardContainer = ({ spotifyApi, accessToken }) => {
             choosePlaylistTracks={choosePlaylistTracks}
             myProfile={myProfile}
             accessToken={accessToken}
+            isShuffle={isShuffle}
           ></Dashboard>
           <FeedBar></FeedBar>
         </Flex>

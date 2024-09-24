@@ -21,13 +21,15 @@ const Playlist = ({
   selectedTrack,
   choosePlaylistTracks,
   accessToken,
+  isShuffle,
 }) => {
   const [pageNumber, setPageNumber] = useState(0)
   const [maxPageNumber, setMaxPageNumber] = useState(0)
   const { playlistTracks, hasMore, loading } = useTracks(
     playlist,
     accessToken,
-    pageNumber
+    pageNumber,
+    isShuffle
   )
   const [tableData, setTableData] = useState([])
   const [sortField, setSortField] = useState('')
@@ -67,7 +69,7 @@ const Playlist = ({
     setMaxPageNumber(playlist.totalTracks / 15 - 1)
     setPageNumber(0)
     setTableData([])
-  }, [playlist])
+  }, [playlist, isShuffle])
 
   const observer = useRef(null)
   const lastTrackElementRef = useCallback(
@@ -157,6 +159,8 @@ function RenderTable(props) {
     playlistTracks,
   } = props
   if (tableData.length > 0) {
+    // TODO: Playlist description
+    // TODO: Default sort
     return (
       <TableContainer id="TableContainer">
         <Table variant="unstyled" layout="fixed">

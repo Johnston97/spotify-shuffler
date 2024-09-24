@@ -1,6 +1,6 @@
 import { Box, Flex, Text } from '@chakra-ui/layout'
 import Playlist from '../Playlists/Playlist'
-import { Image } from '@chakra-ui/react'
+import { Button, Image } from '@chakra-ui/react'
 import useProfile from '../Helpers/useProfile'
 const DashboardContent = ({
   spotifyApi,
@@ -9,6 +9,7 @@ const DashboardContent = ({
   selectedTrack,
   choosePlaylistTracks,
   accessToken,
+  isShuffle,
 }) => {
   const selectedPlaylistOwner = useProfile({
     spotifyApi,
@@ -69,12 +70,12 @@ const DashboardContent = ({
       </Flex>
       <Flex id="PlaylistContent">
         <Playlist
-          // spotifyApi={spotifyApi}
           playlist={playlist}
           chooseTrack={chooseTrack}
           selectedTrack={selectedTrack}
           choosePlaylistTracks={choosePlaylistTracks}
           accessToken={accessToken}
+          isShuffle={isShuffle}
         ></Playlist>
       </Flex>
     </Flex>
